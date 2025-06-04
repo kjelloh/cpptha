@@ -5,6 +5,130 @@ The name is is riff on 'cpp' for the C++ language and 'Tha' as the working name 
 
 The seed for the 'Tha model' is described in YouTube playlist ['C++ Tha Tha'](https://www.youtube.com/watch?v=zdF_evtjJGg&list=PLl2MXgNWEbwE34Cxjx9uW-wdq7RyZ_uQj)
 
+# Initial version 0.0
+
+An empty repository to create a C++ CMake and Conan package manager consuming software development environment.
+
+How this project has been setup
+
+This project is setup as a conan package consumer combined with cmake support for tool chain build and application.
+
+For conan command references see https://docs.conan.io/2/reference/commands.html
+
+## conan new cmake_exe -d name=cpptha -d version=0.0
+
+For conan command reference see https://docs.conan.io/2/reference/commands/new.html
+
+```sh
+kjell-olovhogdahl@MacBook-Pro ~/Documents/GitHub/cpptha % conan new cmake_exe -d name=cpptha -d version=0.0
+File saved: CMakeLists.txt
+File saved: conanfile.py
+File saved: src/cpptha.cpp
+File saved: src/cpptha.h
+File saved: src/main.cpp
+File saved: test_package/conanfile.py
+kjell-olovhogdahl@MacBook-Pro ~/Documents/GitHub/cpptha % 
+```
+
+# Build
+
+The build environment is designed as a conan package manager consumer rpoject using cmake as the tool chain generator and executor.
+
+* Also see the ['init_tool_chain.zsh](init_tool_chain.zsh) script.
+* Also see the ['run.zsh](run.zsh) script
+
+## Script 'init_tool_chain.zsh' execution log example
+
+```zsh
+kjell-olovhogdahl@MacBook-Pro ~/Documents/GitHub/cpptha % ./init_tool_chain.zsh 
+
+======== Input profiles ========
+Profile host:
+[settings]
+arch=armv8
+build_type=Release
+compiler=apple-clang
+compiler.cppstd=23
+compiler.libcxx=libc++
+compiler.version=16
+os=Macos
+
+Profile build:
+[settings]
+arch=armv8
+build_type=Release
+compiler=apple-clang
+compiler.cppstd=gnu17
+compiler.libcxx=libc++
+compiler.version=16
+os=Macos
+
+
+======== Computing dependency graph ========
+Graph root
+    conanfile.py (cpptha/0.0): /Users/kjell-olovhogdahl/Documents/GitHub/cpptha/conanfile.py
+
+======== Computing necessary packages ========
+
+======== Installing packages ========
+
+======== Finalizing install (deploy, generators) ========
+conanfile.py (cpptha/0.0): Calling generate()
+conanfile.py (cpptha/0.0): Generators folder: /Users/kjell-olovhogdahl/Documents/GitHub/cpptha/build/Release/generators
+conanfile.py (cpptha/0.0): CMakeToolchain generated: conan_toolchain.cmake
+conanfile.py (cpptha/0.0): CMakeToolchain: Preset 'conan-release' added to CMakePresets.json.
+    (cmake>=3.23) cmake --preset conan-release
+    (cmake<3.23) cmake <path> -G "Unix Makefiles" -DCMAKE_TOOLCHAIN_FILE=generators/conan_toolchain.cmake  -DCMAKE_POLICY_DEFAULT_CMP0091=NEW -DCMAKE_BUILD_TYPE=Release
+conanfile.py (cpptha/0.0): CMakeToolchain generated: /Users/kjell-olovhogdahl/Documents/GitHub/cpptha/build/Release/generators/CMakePresets.json
+conanfile.py (cpptha/0.0): CMakeToolchain generated: /Users/kjell-olovhogdahl/Documents/GitHub/cpptha/CMakeUserPresets.json
+conanfile.py (cpptha/0.0): Generating aggregated env files
+conanfile.py (cpptha/0.0): Generated aggregated env files: ['conanbuild.sh', 'conanrun.sh']
+Install finished successfully
+Preset CMake variables:
+
+  CMAKE_BUILD_TYPE="Release"
+  CMAKE_POLICY_DEFAULT_CMP0091="NEW"
+  CMAKE_TOOLCHAIN_FILE:FILEPATH="generators/conan_toolchain.cmake"
+
+-- Using Conan toolchain: /Users/kjell-olovhogdahl/Documents/GitHub/cpptha/build/Release/generators/conan_toolchain.cmake
+-- Conan toolchain: Defining libcxx as C++ flags: -stdlib=libc++
+-- Conan toolchain: C++ Standard 23 with extensions OFF
+-- The CXX compiler identification is AppleClang 16.0.0.16000026
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Configuring done (12.2s)
+-- Generating done (0.0s)
+-- Build files have been written to: /Users/kjell-olovhogdahl/Documents/GitHub/cpptha/build/Release
+Toolchain initialization complete.
+You can now build the project using:
+  > 'cmake --build .' inside the 'build' directory.
+  > 'cmake --build build/Release' from here
+Or use the provided 'run.zsh' script to build and run the project.
+kjell-olovhogdahl@MacBook-Pro ~/Documents/GitHub/cpptha % 
+```
+
+## Script 'run.zsh' execution log example (version 0.0)
+
+```sh
+kjell-olovhogdahl@MacBook-Pro ~/Documents/GitHub/cpptha % ./run.zsh example.cpp
+Creating workspace directory...
+Building the project with cmake...
+[100%] Built target cpptha
+Copying the 'cpptha' binary to the workspace directory...
+cpptha/0.0: Hello World Release!
+  cpptha/0.0: __aarch64__ defined
+  cpptha/0.0: __cplusplus202302
+  cpptha/0.0: __GNUC__4
+  cpptha/0.0: __GNUC_MINOR__2
+  cpptha/0.0: __clang_major__16
+  cpptha/0.0: __apple_build_version__16000026
+cpptha/0.0 test_package
+kjell-olovhogdahl@MacBook-Pro ~/Documents/GitHub/cpptha % 
+```
+
 # The Tha type system model
 It basically defines meta tiers with a 'meta' relation from a lower tier to a higher tier. And a 'defacto' relation from a higher tier to a lower tier.
 
