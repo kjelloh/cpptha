@@ -30,3 +30,12 @@
 *.exe
 *.out
 *.app
+
+# conan package manager created files
+/CMakeUserPresets.json
+
+# CMake files
+/build/
+
+# cpptha files
+/workspace/

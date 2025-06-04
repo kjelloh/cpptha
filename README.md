@@ -129,6 +129,80 @@ cpptha/0.0 test_package
 kjell-olovhogdahl@MacBook-Pro ~/Documents/GitHub/cpptha % 
 ```
 
+## Files dynamically created by conan and cmake (That are NOT tracked by git)
+
+This listing was created on macOS in zsh-shell using two 'find' calls and a final 'diff' call.
+
+```sh
+kjell-olovhogdahl@MacBook-Pro ~/Documents/GitHub/cpptha % find . -type f | sort > before.txt
+
+kjell-olovhogdahl@MacBook-Pro ~/Documents/GitHub/cpptha % ./init_tool_chain.zsh 
+
+...
+
+kjell-olovhogdahl@MacBook-Pro ~/Documents/GitHub/cpptha % ./run.zsh 
+
+...
+
+kjell-olovhogdahl@MacBook-Pro ~/Documents/GitHub/cpptha % find . -type f | sort > after.txt
+```
+
+Now the 'diff' on 'before' and 'after' yields the folling listing. It is basically the **CMakeUserPresets.json** file and population of new sub-directories in **./build/Release/**.
+
+The 'run.zsh' script also creates and updates the './workspace' folder with the built application.
+
+```sh
+kjell-olovhogdahl@MacBook-Pro ~/Documents/GitHub/cpptha % diff before.txt after.txt
+
+42a43
+> ./CMakeUserPresets.json
+44a46
+> ./after.txt
+45a48,86
+> ./build/Release/CMakeCache.txt
+> ./build/Release/CMakeFiles/3.31.6/CMakeCXXCompiler.cmake
+> ./build/Release/CMakeFiles/3.31.6/CMakeDetermineCompilerABI_CXX.bin
+> ./build/Release/CMakeFiles/3.31.6/CMakeSystem.cmake
+> ./build/Release/CMakeFiles/3.31.6/CompilerIdCXX/CMakeCXXCompilerId.cpp
+> ./build/Release/CMakeFiles/3.31.6/CompilerIdCXX/CMakeCXXCompilerId.o
+> ./build/Release/CMakeFiles/CMakeConfigureLog.yaml
+> ./build/Release/CMakeFiles/CMakeDirectoryInformation.cmake
+> ./build/Release/CMakeFiles/Makefile.cmake
+> ./build/Release/CMakeFiles/Makefile2
+> ./build/Release/CMakeFiles/TargetDirectories.txt
+> ./build/Release/CMakeFiles/cmake.check_cache
+> ./build/Release/CMakeFiles/cpptha.dir/DependInfo.cmake
+> ./build/Release/CMakeFiles/cpptha.dir/build.make
+> ./build/Release/CMakeFiles/cpptha.dir/cmake_clean.cmake
+> ./build/Release/CMakeFiles/cpptha.dir/compiler_depend.make
+> ./build/Release/CMakeFiles/cpptha.dir/compiler_depend.ts
+> ./build/Release/CMakeFiles/cpptha.dir/depend.make
+> ./build/Release/CMakeFiles/cpptha.dir/flags.make
+> ./build/Release/CMakeFiles/cpptha.dir/link.txt
+> ./build/Release/CMakeFiles/cpptha.dir/progress.make
+> ./build/Release/CMakeFiles/cpptha.dir/src/cpptha.cpp.o
+> ./build/Release/CMakeFiles/cpptha.dir/src/cpptha.cpp.o.d
+> ./build/Release/CMakeFiles/cpptha.dir/src/main.cpp.o
+> ./build/Release/CMakeFiles/cpptha.dir/src/main.cpp.o.d
+> ./build/Release/CMakeFiles/progress.marks
+> ./build/Release/Makefile
+> ./build/Release/cmake_install.cmake
+> ./build/Release/cpptha
+> ./build/Release/generators/CMakePresets.json
+> ./build/Release/generators/cmakedeps_macros.cmake
+> ./build/Release/generators/conan_toolchain.cmake
+> ./build/Release/generators/conanbuild.sh
+> ./build/Release/generators/conanbuildenv-release-armv8.sh
+> ./build/Release/generators/conandeps_legacy.cmake
+> ./build/Release/generators/conanrun.sh
+> ./build/Release/generators/conanrunenv-release-armv8.sh
+> ./build/Release/generators/deactivate_conanbuild.sh
+> ./build/Release/generators/deactivate_conanrun.sh
+51a93
+> ./workspace/cpptha
+kjell-olovhogdahl@MacBook-Pro ~/Documents/GitHub/cpptha % 
+```
+
 # The Tha type system model
 It basically defines meta tiers with a 'meta' relation from a lower tier to a higher tier. And a 'defacto' relation from a higher tier to a lower tier.
 
