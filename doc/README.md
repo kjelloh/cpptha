@@ -154,6 +154,26 @@ CLion integrates seamlessly with this Conan/CMake setup using the generated pres
 4. Select desired preset in CLion's CMake settings
 5. CLion builds using your `build/Debug` or `build/Release` folders
 
+### Cache Management
+
+CLion maintains its own project model cache separate from CMake's build cache:
+
+- **CMake's cache**: Located in `build/Debug/CMakeCache.txt` and `build/Release/CMakeCache.txt`
+- **CLion's cache**: Internal IDE cache for code completion, navigation, and project structure
+
+**When cache gets out of sync:**
+- Adding new Conan dependencies (like gtest)
+- Modifying CMakeLists.txt significantly
+- Changing preset configurations
+
+**Manual refresh:**
+- **Tools → CMake → Reset Cache and Reload Project** (recommended solution)
+
+**Common symptoms of stale cache:**
+- "Could NOT find [Package]" errors in CLion while CLI builds work fine
+- Missing code completion for new dependencies
+- CLion showing incorrect build targets
+
 ### Benefits
 
 - **Consistent toolchain**: Same Conan-generated configuration for CLI and IDE
