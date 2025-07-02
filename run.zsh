@@ -1,8 +1,23 @@
 #!/bin/zsh
 
+# Parse arguments: use Debug as default, accept Release or Debug
+BUILD_TYPE=${1:-Debug}
+
+# Validate build type
+if [[ "$BUILD_TYPE" != "Release" && "$BUILD_TYPE" != "Debug" ]]; then
+    echo "Error: BUILD_TYPE must be 'Release' or 'Debug'"
+    echo "Usage: $0 [Release|Debug] [app_args...]"
+    exit 1
+fi
+
+# Shift to remove BUILD_TYPE from arguments, leaving app arguments
+shift
+
 # Define the build directory and workspace directory
-BUILD_DIR="build/Release"
+BUILD_DIR="build/$BUILD_TYPE"
 WORKSPACE_DIR="workspace"
+
+echo "Running $BUILD_TYPE build..."
 
 # Create the workspace directory if it doesn't exist
 echo "Creating workspace directory..."
