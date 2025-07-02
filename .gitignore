@@ -1,41 +1,11 @@
-# Prerequisites
-*.d
+// conan/cmake framewrok
+CMakeUserPresets.json
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
 
-# Precompiled Headers
-*.gch
-*.pch
+// Project environment
+build/
+workspace/
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
 
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
-*.exe
-*.out
-*.app
-
-# conan package manager created files
-/CMakeUserPresets.json
-
-# CMake files
-/build/
-
-# cpptha files
-/workspace/
+// CLion environment
+.idea/
