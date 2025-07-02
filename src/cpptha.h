@@ -10,5 +10,5 @@
   #define CPPTHA_EXPORT
 #endif
 
-CPPTHA_EXPORT void cpptha();
-CPPTHA_EXPORT void cpptha_print_vector(const std::vector<std::string> &strings);
+CPPTHA_EXPORT void cpptha_print_build_info();
+CPPTHA_EXPORT void cpptha_print_package_info(const std::vector<std::string> &packages);

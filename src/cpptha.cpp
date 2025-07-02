@@ -3,7 +3,7 @@
 
 
 
-void cpptha(){
+void cpptha_print_build_info(){
     
 
     #ifdef NDEBUG
@@ -113,8 +113,8 @@ void cpptha(){
     #endif
 }
 
-void cpptha_print_vector(const std::vector<std::string> &strings) {
-    for(std::vector<std::string>::const_iterator it = strings.begin(); it != strings.end(); ++it) {
+void cpptha_print_package_info(const std::vector<std::string> &packages) {
+    for(std::vector<std::string>::const_iterator it = packages.begin(); it != packages.end(); ++it) {
         std::cout << "cpptha/0.0 " << *it << std::endl;
     }
 }
