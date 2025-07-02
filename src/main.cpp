@@ -1,4 +1,5 @@
 #include "cpptha.h"
+#include "test/test_runner.hpp"
 #include <CLI/CLI.hpp>
 #include <iostream>
 #include <filesystem>
@@ -11,6 +12,10 @@ int main(int argc, char** argv) {
     std::string input_file;
     bool verbose = false;
     bool show_build_info = false;
+    bool run_tests = false;
+    
+    // Test flag - overrides everything else
+    app.add_flag("--test", run_tests, "Run all tests (ignores other arguments)");
     
     // Build info flag - overrides everything else
     app.add_flag("--build-info", show_build_info, "Show build and compiler information (ignores other arguments)");
@@ -22,6 +27,11 @@ int main(int argc, char** argv) {
     app.add_flag("-v,--verbose", verbose, "Enable verbose output");
     
     CLI11_PARSE(app, argc, argv);
+    
+    // Test mode - exit early after running tests
+    if (run_tests) {
+        return tests::run_all() ? 0 : 1;
+    }
     
     // Build info mode - exit early after showing information
     if (show_build_info) {

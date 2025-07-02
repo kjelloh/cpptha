@@ -22,6 +22,7 @@ class cppthaRecipe(ConanFile):
 
     def requirements(self):
         self.requires("cli11/2.4.2")
+        self.requires("gtest/1.14.0")
 
     def layout(self):
         cmake_layout(self)
