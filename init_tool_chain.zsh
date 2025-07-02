@@ -18,7 +18,11 @@ echo "Initializing toolchain for $BUILD_TYPE build..."
 # Install dependencies for the specified build type (also updates cmake presets)
 conan install . --settings=compiler.cppstd=23 --settings=build_type=$BUILD_TYPE --build=missing
 
+# Save the current preset for run.zsh script
+echo "$BUILD_TYPE" > preset.txt
+
 echo "Toolchain initialization complete for $BUILD_TYPE build."
+echo "Current preset saved to preset.txt: $BUILD_TYPE"
 echo "You can now build the project using:"
 echo "  > 'cmake --build build/$BUILD_TYPE' from here"
 echo "Or use the provided 'run.zsh' script to build and run the project."

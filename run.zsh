@@ -1,17 +1,23 @@
 #!/bin/zsh
 
-# Parse arguments: use Debug as default, accept Release or Debug
-BUILD_TYPE=${1:-Debug}
+# Read current preset from file, default to Debug if file doesn't exist
+if [[ -f "preset.txt" ]]; then
+    BUILD_TYPE=$(cat preset.txt)
+    echo "Using preset from preset.txt: $BUILD_TYPE"
+else
+    BUILD_TYPE="Debug"
+    echo "Warning: preset.txt not found, defaulting to Debug"
+    echo "Run './init_tool_chain.zsh [Debug|Release]' first to set preset"
+fi
 
 # Validate build type
 if [[ "$BUILD_TYPE" != "Release" && "$BUILD_TYPE" != "Debug" ]]; then
-    echo "Error: BUILD_TYPE must be 'Release' or 'Debug'"
-    echo "Usage: $0 [Release|Debug] [app_args...]"
+    echo "Error: Invalid preset in preset.txt: $BUILD_TYPE"
+    echo "Run './init_tool_chain.zsh [Debug|Release]' to fix"
     exit 1
 fi
 
-# Shift to remove BUILD_TYPE from arguments, leaving app arguments
-shift
+# All script arguments are passed directly to cpptha (no shift needed)
 
 # Define the build directory and workspace directory
 BUILD_DIR="build/$BUILD_TYPE"
