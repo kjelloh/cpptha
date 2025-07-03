@@ -1,4 +1,4 @@
 # cpptha
 C++ meta-code preprocessor for scripts based on the 'Tha' type system model embedded in C++ source code
 
-[doc/README](doc/README.md)
+[docs/README](docs/README.md)
