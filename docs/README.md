@@ -90,9 +90,11 @@ File saved: test_package/conanfile.py
 kjell-olovhogdahl@MacBook-Pro ~/Documents/GitHub/cpptha % 
 ```
 
-# Build
+# Build / Development
 
 The build environment is designed as a conan package manager consumer project using cmake as the tool chain generator and executor.
+
+* [Development Progress](../CLAUDE.md) - Architecture and progress notes (AI-generated, developer-readable)
 
 ## Conan/CMake Framework
 
