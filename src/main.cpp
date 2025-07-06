@@ -13,6 +13,7 @@ int main(int argc, char** argv) {
     bool verbose = false;
     bool show_build_info = false;
     bool run_tests = false;
+    bool preprocess_only = false;
     
     // Test flag - overrides everything else
     app.add_flag("--test", run_tests, "Run all tests (ignores other arguments)");
@@ -25,6 +26,7 @@ int main(int argc, char** argv) {
         ->check(CLI::ExistingFile);
     
     app.add_flag("-v,--verbose", verbose, "Enable verbose output");
+    app.add_flag("-E", preprocess_only, "Preprocess only (do not compile)");
     
     CLI11_PARSE(app, argc, argv);
     
@@ -35,12 +37,7 @@ int main(int argc, char** argv) {
     
     // Build info mode - exit early after showing information
     if (show_build_info) {
-        cpptha_print_build_info();
-        
-        std::vector<std::string> packages;
-        packages.push_back("CLI11");
-        cpptha_print_package_info(packages);
-        
+        cpptha_print_build_info();        
         return 0;  // Exit without processing any file
     }
     
@@ -57,6 +54,17 @@ int main(int argc, char** argv) {
     }
     
     std::cout << "Input file: " << input_file << std::endl;
+    
+    cpptha_config_t config = {0};
+    config.verbose = verbose;
+    config.preprocess_only = preprocess_only;
+    config.max_iterations = 100;
+    
+    int result = cpptha_process_file(input_file.c_str(), nullptr, &config);
+    if (result != 0) {
+        std::cerr << "Error: Failed to process file: " << input_file << std::endl;
+        return result;
+    }
     
     return 0;
 }

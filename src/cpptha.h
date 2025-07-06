@@ -10,5 +10,11 @@
   #define CPPTHA_EXPORT
 #endif
 
+typedef struct {
+    bool verbose;
+    bool preprocess_only;
+    int max_iterations;
+} cpptha_config_t;
+CPPTHA_EXPORT int cpptha_process_file(const char* input_file, const char* output_file, const cpptha_config_t* config);
 CPPTHA_EXPORT void cpptha_print_build_info();
-CPPTHA_EXPORT void cpptha_print_package_info(const std::vector<std::string> &packages);
+

@@ -2,10 +2,24 @@
 #include "cpptha.h"
 
 
+int cpptha_process_file(const char* input_file, const char* output_file, const cpptha_config_t* config) {
+    if (!input_file || !config) {
+        return -1; // Invalid parameters
+    }
+    
+    if (config->verbose) {
+        std::cout << "Processing file: " << input_file << std::endl;
+        std::cout << "Preprocess only: " << (config->preprocess_only ? "yes" : "no") << std::endl;
+        std::cout << "Max iterations: " << config->max_iterations << std::endl;
+    }
+    
+    // TODO: Implement meta-collapse processing
+    std::cout << "Meta-collapse processing not yet implemented" << std::endl;
+    
+    return 0;
+}
 
 void cpptha_print_build_info(){
-    
-
     #ifdef NDEBUG
     std::cout << "cpptha/0.0: Hello World Release!\n";
     #else
@@ -111,10 +125,4 @@ void cpptha_print_build_info(){
     #if __CYGWIN__
     std::cout << "  cpptha/0.0: __CYGWIN__" << __CYGWIN__<< "\n";
     #endif
-}
-
-void cpptha_print_package_info(const std::vector<std::string> &packages) {
-    for(std::vector<std::string>::const_iterator it = packages.begin(); it != packages.end(); ++it) {
-        std::cout << "cpptha/0.0 " << *it << std::endl;
-    }
 }
