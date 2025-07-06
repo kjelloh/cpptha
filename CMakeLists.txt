@@ -8,6 +8,7 @@ find_package(pegtl REQUIRED)
 add_executable(cpptha 
     src/cpptha.cpp 
     src/main.cpp
+    src/drive/driver.cpp
     src/parse/meta_parser.cpp
     src/test/test_runner.cpp
     src/test/test_atomics.cpp

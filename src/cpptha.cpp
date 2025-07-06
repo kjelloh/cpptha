@@ -1,22 +1,27 @@
 #include <iostream>
 #include "cpptha.h"
-
+#include "drive/driver.hpp"
 
 int cpptha_process_file(const char* input_file, const char* output_file, const cpptha_config_t* config) {
-    if (!input_file || !config) {
-        return -1; // Invalid parameters
+    // C API validation
+    if (!input_file) {
+        return 1; // Missing input file
+    }
+    if (!config) {
+        return 2; // Missing config
     }
     
-    if (config->verbose) {
-        std::cout << "Processing file: " << input_file << std::endl;
-        std::cout << "Preprocess only: " << (config->preprocess_only ? "yes" : "no") << std::endl;
-        std::cout << "Max iterations: " << config->max_iterations << std::endl;
-    }
+    // Convert C types to C++ types
+    cpptha::Options options;
+    options.verbose = config->verbose;
+    options.preprocess_only = config->preprocess_only;
+    options.max_iterations = config->max_iterations;
     
-    // TODO: Implement meta-collapse processing
-    std::cout << "Meta-collapse processing not yet implemented" << std::endl;
+    std::string cpp_input_file(input_file);
+    std::string cpp_output_file = output_file ? std::string(output_file) : "";
     
-    return 0;
+    // Bridge to C++ implementation
+    return cpptha::process_file(cpp_input_file, cpp_output_file, options);
 }
 
 void cpptha_print_build_info(){
