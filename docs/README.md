@@ -94,7 +94,18 @@ kjell-olovhogdahl@MacBook-Pro ~/Documents/GitHub/cpptha %
 
 The build environment is designed as a conan package manager consumer project using cmake as the tool chain generator and executor.
 
-* [Development Progress](../CLAUDE.md) - Architecture and progress notes (AI-generated, developer-readable)
+## Developer Resources
+
+### AI-Assisted Development
+This project uses **Claude Code** for AI-assisted development. The development progress, architecture decisions, and implementation details are documented in:
+
+* **[CLAUDE.md](../CLAUDE.md)** - Complete development progress and architecture documentation
+  - Current implementation status with ✅ completion markers
+  - Technical architecture diagrams and component descriptions  
+  - Step-by-step development history and decision rationale
+  - Next steps and planned enhancements
+
+**Note for developers**: CLAUDE.md serves as the primary technical documentation for understanding the codebase architecture, current implementation status, and development roadmap. It's automatically updated as development progresses and provides detailed insights into the meta-scope processing pipeline implementation.
 
 ## Conan/CMake Framework
 
