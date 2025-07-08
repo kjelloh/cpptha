@@ -1,4 +1,5 @@
 #include "driver.hpp"
+#include "../parse/meta_parser.hpp"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -19,10 +20,76 @@ namespace cpptha {
             std::cout << "Max iterations: " << options.max_iterations << std::endl;
         }
         
-        // TODO: Implement meta-collapse processing architecture
-        std::cout << "cpptha::process_file: Meta-collapse architecture not yet implemented" << std::endl;
-        
-        return 0;
+        try {
+            // Read input file
+            std::ifstream file(input_file);
+            if (!file) {
+                std::cerr << "Error: Cannot open input file: " << input_file << std::endl;
+                return 1;
+            }
+            
+            std::ostringstream buffer;
+            buffer << file.rdbuf();
+            std::string content = buffer.str();
+            file.close();
+            
+            // Parse meta-scopes
+            parse::MetaParser parser;
+            auto parse_result = parser.parse_content(content);
+            
+            if (!parse_result) {
+                std::cerr << "Error: Failed to parse meta-scopes: " << parser.get_last_error() << std::endl;
+                return 2;
+            }
+            
+            std::string transformed_content = content;
+            
+            if (options.verbose) {
+                std::cout << "Found " << parse_result->meta_scopes.size() << " meta-scope(s)" << std::endl;
+            }
+            
+            // Process all meta-scopes (from last to first to preserve positions)
+            for (int i = parse_result->meta_scopes.size() - 1; i >= 0; --i) {
+                if (options.verbose) {
+                    std::cout << "Processing meta-scope " << (i + 1) << "..." << std::endl;
+                }
+                
+                // Get the complete meta-scope as string
+                std::string meta_scope_str(parse_result->meta_scopes[i]);
+                
+                // Process the complete meta-scope
+                std::string replacement = process_scope(meta_scope_str, options);
+                
+                // Replace the meta-scope with the processed result
+                auto range = parse_result->get_scope_range(i);
+                transformed_content = transformed_content.substr(0, range.first) + replacement + transformed_content.substr(range.second);
+            }
+            
+            // Write output file (or stdout if no output file specified)
+            if (output_file.empty()) {
+                // No output file specified, write to stdout
+                std::cout << transformed_content;
+            } else {
+                std::ofstream output(output_file);
+                if (!output) {
+                    std::cerr << "Error: Cannot create output file: " << output_file << std::endl;
+                    return 3;
+                }
+                
+                output << transformed_content;
+                output.close();
+            }
+            
+            if (options.verbose) {
+                std::cout << "Processing complete. Output written to: " << output_file << std::endl;
+            }
+            
+            return 0;
+            
+        } catch (const std::exception& e) {
+            std::cerr << "Error: " << e.what() << std::endl;
+            return 4;
+        }
     }
     
     std::string process_scope(const std::string& meta_scope_content, const Options& options) {
@@ -64,15 +131,29 @@ namespace cpptha {
     
     std::string generate_shared_lib_source(const std::string& cpptha_repr) {
         std::ostringstream source;
-        source << "#include <string>\n";
+        size_t content_size = cpptha_repr.size();
+        
+        source << "// Generated C++/C hybrid shared library source\n";
+        source << "// Exposes C API, implements in C++\n";
+        source << "// Content size: " << content_size << " bytes\n";
         source << "\n";
+        
+        // C API Declaration
         source << "extern \"C\" {\n";
-        source << "    const char* defacto_string() {\n";
-        source << "        // Generated from cpptha representation: " << cpptha_repr.substr(0, 30) << "...\n";
-        source << "        static std::string result = \"" << cpptha_repr << "\";\n";
-        source << "        return result.c_str();\n";
-        source << "    }\n";
+        source << "    const char* defacto_string();\n";
         source << "}\n";
+        source << "\n";
+        
+        // C++ Implementation using raw string literal
+        source << "// C++ implementation using raw string literal\n";
+        source << "static const char* cpptha_content = R\"CPPTHA_DELIMITER(\n";
+        source << cpptha_repr;  // Raw content, no escaping needed!
+        source << ")CPPTHA_DELIMITER\";\n";
+        source << "\n";
+        source << "const char* defacto_string() {\n";
+        source << "    return cpptha_content;\n";
+        source << "}\n";
+        
         return source.str();
     }
     
