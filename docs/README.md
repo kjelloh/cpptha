@@ -54,11 +54,47 @@ As the final stage the application will apply a C++ compiler to the resulting C+
 
 # Command line
 
+Current implementation processes meta-scopes in C++ source files and outputs the transformed source code.
+
+## Usage
+
 ```sh
->cpptha with_meta_code.cpp
+cpptha [OPTIONS] [file]
 ```
 
-The result will be some compilation failure or a compiled binary.
+## Options
+
+- `file` - C++ source/header file to process (must exist)
+- `-h, --help` - Print help message and exit
+- `-v, --verbose` - Enable verbose output (shows processing details)
+- `-E` - Preprocess only (do not compile) - *Note: Currently not fully implemented*
+- `--test` - Run all tests (ignores other arguments)
+- `--build-info` - Show build and compiler information (ignores other arguments)
+
+## Examples
+
+```sh
+# Process a file with meta-scopes (output to stdout)
+cpptha input.cpp
+
+# Process with verbose output to see pipeline details
+cpptha --verbose input.cpp
+
+# Run all tests
+cpptha --test
+
+# Show build information
+cpptha --build-info
+```
+
+## Current Behavior
+
+- **Input**: C++ source file potentially containing `meta{...}` scopes
+- **Processing**: Each meta-scope is processed through shared library generation pipeline
+- **Output**: Transformed source code written to stdout (or specified output file)
+- **Build Artifacts**: Intermediate files preserved in `./cpptha_build/meta_<timestamp>/` for inspection
+
+**Note**: The current implementation focuses on meta-scope processing infrastructure. The actual meta-language transformation is still in development (currently passes content through as-is).
 
 # PyroTha Docs
 
