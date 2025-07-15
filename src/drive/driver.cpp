@@ -1,5 +1,6 @@
 #include "driver.hpp"
 #include "../parse/meta_parser.hpp"
+#include "../parse/meta_to_cpp_parse.hpp"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -124,9 +125,32 @@ namespace cpptha {
     }
     
     std::string meta_to_cpptha_repr(const std::string& content) {
-        // For now, just return the content as-is
-        // TODO: Implement actual meta-scope to cpptha representation transformation
-        return content;
+        // Parse the meta-content using our new parser
+        parse::MetaToCppParser parser;
+        auto parse_result = parser.parse(content);
+        
+        if (!parse_result.success) {
+            std::cerr << "Error parsing meta-content: " << parse_result.error_message << std::endl;
+            return content; // fallback to original content
+        }
+        
+        // Transform parsed constructs to cpptha representation
+        std::ostringstream result;
+        result << "meta_tha env{};\n";
+        
+        for (const auto& construct : parse_result.constructs) {
+            if (construct.keyword == "struct") {
+                if (construct.identifier) {
+                    result << "env += struct_tha(\"" << construct.identifier.value() 
+                           << "\", \"" << construct.body << "\");\n";
+                }
+            } else if (construct.keyword == "meta") {
+                // Meta constructs are processed recursively
+                result << meta_to_cpptha_repr(construct.body);
+            }
+        }
+        
+        return result.str();
     }
     
     std::string generate_shared_lib_source(const std::string& cpptha_repr) {
