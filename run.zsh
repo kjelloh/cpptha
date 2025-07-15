@@ -43,6 +43,12 @@ fi
 echo "Copying the 'cpptha' binary to the workspace directory..."
 cp "$BUILD_DIR/cpptha" "$WORKSPACE_DIR/"
 
+# Copy meh library files to workspace/src/meh
+echo "Copying meh library files to workspace..."
+mkdir -p "$WORKSPACE_DIR/src/meh"
+cp "src/meh/meh.hpp" "$WORKSPACE_DIR/src/meh/"
+cp "src/meh/meh.cpp" "$WORKSPACE_DIR/src/meh/"
+
 # Change to the workspace directory
 cd "$WORKSPACE_DIR"
 

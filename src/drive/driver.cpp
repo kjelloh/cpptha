@@ -168,6 +168,10 @@ namespace cpptha {
         source << "}\n";
         source << "\n";
         
+        // Include meh library for meta_tha and struct_tha classes
+        source << "#include \"meh.hpp\"\n";
+        source << "\n";
+        
         // C++ Implementation using raw string literal
         source << "// C++ implementation using raw string literal\n";
         source << "static const char* cpptha_content = R\"CPPTHA_DELIMITER(\n";
@@ -198,6 +202,23 @@ namespace cpptha {
         }
         file << source_code;
         file.close();
+        
+        // Copy meh library files to build directory
+        std::filesystem::path meh_source_dir = std::filesystem::current_path() / "src" / "meh";
+        
+        // Copy meh.hpp
+        std::filesystem::copy_file(
+            meh_source_dir / "meh.hpp",
+            meta_dir / "meh.hpp",
+            std::filesystem::copy_options::overwrite_existing
+        );
+        
+        // Copy meh.cpp
+        std::filesystem::copy_file(
+            meh_source_dir / "meh.cpp",
+            meta_dir / "meh.cpp", 
+            std::filesystem::copy_options::overwrite_existing
+        );
         
         return meta_dir;
     }

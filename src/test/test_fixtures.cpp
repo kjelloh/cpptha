@@ -1,6 +1,6 @@
 #include "test_fixtures.hpp"
 
 namespace tests::fixtures {
-    // Placeholder for future test fixtures and utilities
-    // Will be expanded when we need reusable test data/setup
+    // Implementation of MetaTransformFixture methods
+    // All implementation is in the header file for this fixture
 }
