@@ -81,9 +81,8 @@ TEST_F(MetaTransformFixture, CppthaPreprocessOnlyMode) {
         EXPECT_TRUE(output_content.find("return 0;") != std::string::npos);
         
         // The meta-scope should be transformed/replaced
-        // Current implementation should show the transformation result
-        EXPECT_TRUE(output_content.find("meta_tha env") != std::string::npos);
-        EXPECT_TRUE(output_content.find("struct_tha") != std::string::npos);
+        // New implementation executes the code and returns the actual C++ result
+        EXPECT_TRUE(output_content.find("struct A{  }") != std::string::npos);
         
         std::cout << "Preprocessed output:\n" << output_content << std::endl;
     }

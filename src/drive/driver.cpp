@@ -136,17 +136,29 @@ namespace cpptha {
         
         // Transform parsed constructs to cpptha representation
         std::ostringstream result;
-        result << "meta_tha env{};\n";
+        result << "meh::meta_tha env{};\n";
         
         for (const auto& construct : parse_result.constructs) {
             if (construct.keyword == "struct") {
                 if (construct.identifier) {
-                    result << "env += struct_tha(\"" << construct.identifier.value() 
+                    result << "env += meh::struct_tha(\"" << construct.identifier.value() 
                            << "\", \"" << construct.body << "\");\n";
                 }
             } else if (construct.keyword == "meta") {
-                // Meta constructs are processed recursively
-                result << meta_to_cpptha_repr(construct.body);
+                // Meta constructs are processed recursively - parse the body directly
+                parse::MetaToCppParser recursive_parser;
+                auto recursive_result = recursive_parser.parse(construct.body);
+                
+                if (recursive_result.success) {
+                    for (const auto& inner_construct : recursive_result.constructs) {
+                        if (inner_construct.keyword == "struct") {
+                            if (inner_construct.identifier) {
+                                result << "env += meh::struct_tha(\"" << inner_construct.identifier.value() 
+                                       << "\", \"" << inner_construct.body << "\");\n";
+                            }
+                        }
+                    }
+                }
             }
         }
         
@@ -172,14 +184,14 @@ namespace cpptha {
         source << "#include \"meh.hpp\"\n";
         source << "\n";
         
-        // C++ Implementation using raw string literal
-        source << "// C++ implementation using raw string literal\n";
-        source << "static const char* cpptha_content = R\"CPPTHA_DELIMITER(\n";
-        source << cpptha_repr;  // Raw content, no escaping needed!
-        source << ")CPPTHA_DELIMITER\";\n";
-        source << "\n";
+        // C++ Implementation that executes cpptha_repr code and returns env.to_string()
         source << "const char* defacto_string() {\n";
-        source << "    return cpptha_content;\n";
+        source << "    // Execute the cpptha representation code\n";
+        source << "    " << cpptha_repr;  // Inject the code directly
+        source << "\n";
+        source << "    // Return the result of env.to_string()\n";
+        source << "    static std::string result = env.to_string();\n";
+        source << "    return result.c_str();\n";
         source << "}\n";
         
         return source.str();
@@ -226,12 +238,14 @@ namespace cpptha {
     bool compile_shared_library(const std::filesystem::path& source_dir, 
                                const std::filesystem::path& output_lib) {
         std::filesystem::path source_file = source_dir / "meta_transform.cpp";
+        std::filesystem::path meh_source_file = source_dir / "meh.cpp";
         
-        // Build compiler command
+        // Build compiler command (include both meta_transform.cpp and meh.cpp)
         std::ostringstream cmd;
         cmd << "g++ -shared -fPIC -std=c++17 -o " 
             << output_lib.string() << " " 
-            << source_file.string();
+            << source_file.string() << " " 
+            << meh_source_file.string();
         
         // Execute compiler
         int result = std::system(cmd.str().c_str());

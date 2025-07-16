@@ -12,6 +12,7 @@ namespace meh {
   meta_tha::meta_tha() {}
   meta_tha& meta_tha::operator+=(tha const& x) {
     m_env.push_back(x);
+    return *this;
   }
 
   struct ThaToCppVisitor {
