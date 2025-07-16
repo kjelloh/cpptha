@@ -199,11 +199,11 @@ namespace cpptha {
     
     std::filesystem::path create_shared_lib_folder_and_source(const std::string& source_code) {
         // Create build directory in current working directory
-        std::filesystem::path build_dir = std::filesystem::current_path() / "cpptha_build";
+        std::filesystem::path build_dir = std::filesystem::current_path() / "meh_build";
         std::filesystem::create_directories(build_dir);
         
         // Create unique meta-scope processing directory
-        std::filesystem::path meta_dir = build_dir / ("meta_" + std::to_string(std::time(nullptr)));
+        std::filesystem::path meta_dir = build_dir / ("meh_" + std::to_string(std::time(nullptr)));
         std::filesystem::create_directories(meta_dir);
         
         // Write source file

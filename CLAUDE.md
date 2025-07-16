@@ -113,7 +113,7 @@ struct A{  }
 - Filtered execution prevents duplicate test runs
 - Test files organized in `workspace/cpptha_test/TestName_TestCase/`
 - Comprehensive end-to-end validation including `-E` preprocessing
-- Build artifacts preserved in `workspace/cpptha_build/meta_*/`
+- Build artifacts preserved in `workspace/meh_build/meh_*/`
 
 **Test Features:**
 - ✅ Complete meta-scope transformation validation
@@ -178,6 +178,6 @@ workspace/
 ├── src/meh/                  # Meh library files
 ├── cpptha_test/              # Test files (preserved with -k)
 │   └── TestName_TestCase/    # Test-specific directories
-└── cpptha_build/             # DLL compilation artifacts
-    └── meta_<timestamp>/     # Build directories
+└── meh_build/                # DLL compilation artifacts
+    └── meh_<timestamp>/      # Build directories
 ```

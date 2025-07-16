@@ -92,7 +92,7 @@ cpptha --build-info
 - **Input**: C++ source file potentially containing `meta{...}` scopes
 - **Processing**: Each meta-scope is processed through shared library generation pipeline
 - **Output**: Transformed source code written to stdout (or specified output file)
-- **Build Artifacts**: Intermediate files preserved in `./cpptha_build/meta_<timestamp>/` for inspection
+- **Build Artifacts**: Intermediate files preserved in `./meh_build/meh_<timestamp>/` for inspection
 
 **Note**: The current implementation focuses on meta-scope processing infrastructure. The actual meta-language transformation is still in development (currently passes content through as-is).
 
