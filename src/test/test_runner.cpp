@@ -8,6 +8,7 @@ namespace tests {
     bool run_all() {
         std::cout << "Running all tests..." << std::endl;
         
+        ::testing::InitGoogleTest();
         bool atomics_pass = atomics::run_all();
         bool integrations_pass = integrations::run_all();
         

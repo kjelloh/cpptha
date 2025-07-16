@@ -93,8 +93,8 @@ namespace tests::integrations {
     bool run_all() {
         std::cout << "Running integration tests..." << std::endl;
         
-        // Run gtest for this namespace
-        ::testing::InitGoogleTest();
+        // Run gtest with filter for integration tests only
+        ::testing::GTEST_FLAG(filter) = "IntegrationTests.*:MetaTransformFixture.*";
         int result = RUN_ALL_TESTS();
         
         return result == 0;

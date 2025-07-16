@@ -95,8 +95,8 @@ namespace tests::atomics {
     bool run_all() {
         std::cout << "Running atomic tests..." << std::endl;
         
-        // Run gtest for this namespace
-        ::testing::InitGoogleTest();
+        // Run gtest with filter for atomic tests only
+        ::testing::GTEST_FLAG(filter) = "AtomicTests.*:MetaParserTest.*";
         int result = RUN_ALL_TESTS();
         
         return result == 0;
