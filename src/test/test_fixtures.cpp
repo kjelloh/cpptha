@@ -2,6 +2,11 @@
 
 namespace tests::fixtures {
     
+    TestEnvironment* TestEnvironment::GetInstance() {
+        static TestEnvironment instance;
+        return &instance;
+    }
+    
     void MetaTransformFixture::SetUp() {
         // Create test directory under current working directory/cpptha_test
         // This ensures tests run in workspace when using run.zsh --test
@@ -19,8 +24,12 @@ namespace tests::fixtures {
     }
     
     void MetaTransformFixture::TearDown() {
-        // Clean up test-specific directory but preserve cpptha_test for inspection
-        std::filesystem::remove_all(temp_dir);
+        // Clean up test-specific directory unless --keep-test-files was specified
+        if (!TestEnvironment::GetInstance()->ShouldKeepTestFiles()) {
+            std::filesystem::remove_all(temp_dir);
+        } else {
+            std::cout << "Test files preserved in: " << temp_dir << std::endl;
+        }
     }
     
     void MetaTransformFixture::copy_meh_library_to(const std::filesystem::path& build_dir) {

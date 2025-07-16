@@ -13,10 +13,12 @@ int main(int argc, char** argv) {
     bool verbose = false;
     bool show_build_info = false;
     bool run_tests = false;
+    bool keep_test_files = false;
     bool preprocess_only = false;
     
     // Test flag - overrides everything else
     app.add_flag("--test", run_tests, "Run all tests (ignores other arguments)");
+    app.add_flag("-k,--keep-test-files", keep_test_files, "Preserve test files after running tests");
     
     // Build info flag - overrides everything else
     app.add_flag("--build-info", show_build_info, "Show build and compiler information (ignores other arguments)");
@@ -32,7 +34,7 @@ int main(int argc, char** argv) {
     
     // Test mode - exit early after running tests
     if (run_tests) {
-        return tests::run_all() ? 0 : 1;
+        return tests::run_all(keep_test_files) ? 0 : 1;
     }
     
     // Build info mode - exit early after showing information
