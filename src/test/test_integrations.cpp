@@ -84,6 +84,8 @@ TEST_F(MetaTransformFixture, CppthaPreprocessOnlyMode) {
         // New implementation executes the code and returns the actual C++ result
         EXPECT_TRUE(output_content.find("struct A{  }") != std::string::npos);
         
+        std::cout << "Test directory: " << temp_dir << std::endl;
+        std::cout << "Input file: " << input_file << std::endl; 
         std::cout << "Preprocessed output:\n" << output_content << std::endl;
     }
 

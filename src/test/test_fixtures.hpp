@@ -11,16 +11,23 @@ namespace tests::fixtures {
     class MetaTransformFixture : public ::testing::Test {
     protected:
         void SetUp() override {
-            // Create temporary test directory
-            temp_dir = std::filesystem::temp_directory_path() / "cpptha_test_build";
+            // Create test directory under current working directory/cpptha_test
+            // This ensures tests run in workspace when using run.zsh --test
+            test_base_dir = std::filesystem::current_path() / "cpptha_test";
+            std::filesystem::create_directories(test_base_dir);
+            
+            // Create test-specific subdirectory based on test name
+            auto test_info = ::testing::UnitTest::GetInstance()->current_test_info();
+            std::string test_name = std::string(test_info->test_suite_name()) + "_" + std::string(test_info->name());
+            temp_dir = test_base_dir / test_name;
             std::filesystem::create_directories(temp_dir);
             
-            // Copy meh library files to test directory
+            // Copy meh library files to test directory (needed for some tests)
             copy_meh_library();
         }
         
         void TearDown() override {
-            // Clean up temporary directory
+            // Clean up test-specific directory but preserve cpptha_test for inspection
             std::filesystem::remove_all(temp_dir);
         }
         
@@ -50,7 +57,8 @@ namespace tests::fixtures {
             return current / "src" / "meh";
         }
         
-        std::filesystem::path temp_dir;
+        std::filesystem::path test_base_dir;  // cpptha_test directory
+        std::filesystem::path temp_dir;      // test-specific subdirectory
         
     private:
         void copy_meh_library() {
