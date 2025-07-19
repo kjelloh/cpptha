@@ -5,8 +5,18 @@
 
 namespace cpptha {
 
-    MehWorkspace::MehWorkspace(const std::filesystem::path& working_dir) 
-        : working_dir(working_dir) {
+    MehWorkspace::MehWorkspace(const std::filesystem::path& working_dir, bool keep_files) 
+        : working_dir(working_dir), keep_files(keep_files) {
+    }
+
+    MehWorkspace::~MehWorkspace() {
+        if (!keep_files && !workspace_dir.empty()) {
+            try {
+                std::filesystem::remove_all(workspace_dir);
+            } catch (const std::exception& e) {
+                // Silently ignore cleanup errors to avoid throwing from destructor
+            }
+        }
     }
 
     void MehWorkspace::setup_for_source(const std::string& source_code) {

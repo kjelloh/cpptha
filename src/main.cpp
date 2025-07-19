@@ -60,6 +60,7 @@ int main(int argc, char** argv) {
     cpptha_config_t config = {0};
     config.verbose = verbose;
     config.preprocess_only = preprocess_only;
+    config.keep_files = keep_test_files;
     config.max_iterations = 100;
     
     int result = cpptha_process_file(input_file.c_str(), nullptr, &config);

@@ -7,9 +7,10 @@ namespace cpptha {
     struct Options {
         bool verbose;
         bool preprocess_only;
+        bool keep_files;
         int max_iterations;
         
-        Options() : verbose(false), preprocess_only(false), max_iterations(100) {}
+        Options() : verbose(false), preprocess_only(false), keep_files(false), max_iterations(100) {}
     };
     
     int process_file(const std::string& input_file, 
@@ -22,7 +23,7 @@ namespace cpptha {
     // Pipeline step functions
     std::string meta_to_cpptha_repr(const std::string& content);
     std::string generate_shared_lib_source(const std::string& cpptha_repr);
-    MehWorkspace create_shared_lib_folder_and_source(const std::string& source_code);
+    MehWorkspace create_shared_lib_folder_and_source(const std::string& source_code, const Options& options);
     bool compile_shared_library(const MehWorkspace& workspace);
     std::string load_and_execute_defacto_string(const MehWorkspace& workspace);
 }

@@ -15,6 +15,7 @@ int cpptha_process_file(const char* input_file, const char* output_file, const c
     cpptha::Options options;
     options.verbose = config->verbose;
     options.preprocess_only = config->preprocess_only;
+    options.keep_files = config->keep_files;
     options.max_iterations = config->max_iterations;
     
     std::string cpp_input_file(input_file);

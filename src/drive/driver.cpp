@@ -107,7 +107,7 @@ namespace cpptha {
         std::string source_code = generate_shared_lib_source(cpptha_repr);
         
         // Step 3: Create workspace and populate it
-        MehWorkspace workspace = create_shared_lib_folder_and_source(source_code);
+        MehWorkspace workspace = create_shared_lib_folder_and_source(source_code, options);
         
         // Step 4: Compile using workspace
         if (!compile_shared_library(workspace)) {
@@ -198,8 +198,8 @@ namespace cpptha {
         return source.str();
     }
     
-    MehWorkspace create_shared_lib_folder_and_source(const std::string& source_code) {
-        MehWorkspace workspace(std::filesystem::current_path());
+    MehWorkspace create_shared_lib_folder_and_source(const std::string& source_code, const Options& options) {
+        MehWorkspace workspace(std::filesystem::current_path(), options.keep_files);
         workspace.setup_for_source(source_code);
         return workspace;
     }

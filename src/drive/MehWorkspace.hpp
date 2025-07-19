@@ -7,7 +7,8 @@ namespace cpptha {
     // MehWorkspace: Responsible for folder creation and population
     class MehWorkspace {
     public:
-        explicit MehWorkspace(const std::filesystem::path& working_dir);
+        explicit MehWorkspace(const std::filesystem::path& working_dir, bool keep_files = false);
+        ~MehWorkspace();
         
         // Setup workspace with source code
         void setup_for_source(const std::string& source_code);
@@ -21,6 +22,7 @@ namespace cpptha {
     private:
         std::filesystem::path working_dir;
         std::filesystem::path workspace_dir;
+        bool keep_files;
         
         void create_workspace_directory();
         void copy_meh_library_files();

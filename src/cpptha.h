@@ -13,6 +13,7 @@
 typedef struct {
     bool verbose;
     bool preprocess_only;
+    bool keep_files;
     int max_iterations;
 } cpptha_config_t;
 CPPTHA_EXPORT int cpptha_process_file(const char* input_file, const char* output_file, const cpptha_config_t* config);
