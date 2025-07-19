@@ -7,6 +7,20 @@
 // The CPP library to build the meh shared binary (dll)
 // This library makes src/drive/driver.cpp generated source code compile
 namespace meh {
+
+  class Environment {
+  public:
+    using pointer = std::unique_ptr<Environment>;
+    pointer& instance() {
+      if (!m_instance_ptr) {
+        m_instance_ptr = std::make_unique<Environment>();
+      }
+      return m_instance_ptr;
+    }
+  private:
+    pointer m_instance_ptr{};
+  }; 
+
   using MaybeString = std::optional<std::string>;
   class struct_tha {
   public:

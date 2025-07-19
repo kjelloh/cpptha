@@ -6,6 +6,12 @@
 
 namespace tests::atomics {
 
+    // Dummy atomic test using gtest - always passes
+    TEST(AtomicTests, DummyAlwaysPass) {
+        EXPECT_TRUE(true);
+        ASSERT_EQ(1, 1);
+    }
+
     namespace parse {
 
 
@@ -85,11 +91,6 @@ namespace tests::atomics {
             EXPECT_EQ(result->source_content, "");
         }
 
-    }
-    // Dummy atomic test using gtest - always passes
-    TEST(AtomicTests, DummyAlwaysPass) {
-        EXPECT_TRUE(true);
-        ASSERT_EQ(1, 1);
     }
     
     bool run_all() {

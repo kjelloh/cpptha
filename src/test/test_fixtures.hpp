@@ -4,6 +4,7 @@
 #include <filesystem>
 #include <fstream>
 #include <string>
+#include <expected>
 
 namespace tests::fixtures {
     
@@ -17,7 +18,24 @@ namespace tests::fixtures {
     private:
         bool keep_test_files_ = false;
     };
-    
+
+    // Fixture to build the meh library stand-alone
+    // The fixture performs the build in to_built() method
+    // and returns the compiler output as an std::expected
+    class MehBuildFixture : public ::testing::Test {
+    protected:
+        void SetUp() override;
+        void TearDown() override;
+
+        std::expected<std::string,std::string> to_built();
+
+    private:
+        void copy_meh_library();
+        std::filesystem::path test_base_dir;  // cpptha_test directory
+        std::filesystem::path temp_dir;      // test-specific subdirectory
+
+    };
+
     // Base fixture for meta-transform tests that need meh library support
     class MetaTransformFixture : public ::testing::Test {
     protected:

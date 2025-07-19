@@ -9,6 +9,8 @@ add_executable(cpptha
     src/cpptha.cpp 
     src/main.cpp
     src/drive/driver.cpp
+    src/drive/meh_workspace.cpp
+    src/drive/meh_build.cpp
     src/parse/meta_parser.cpp
     src/parse/meta_to_cpp_parse.cpp
     src/test/test_runner.cpp

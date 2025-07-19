@@ -1,4 +1,6 @@
 #include "driver.hpp"
+#include "meh_workspace.hpp"
+#include "meh_build.hpp"
 #include "../parse/meta_parser.hpp"
 #include "../parse/meta_to_cpp_parse.hpp"
 #include <iostream>
@@ -104,21 +106,20 @@ namespace cpptha {
         // Step 2: Generate C++ source code
         std::string source_code = generate_shared_lib_source(cpptha_repr);
         
-        // Step 3: Create temp directory and write source files
-        std::filesystem::path source_dir = create_shared_lib_folder_and_source(source_code);
+        // Step 3: Create workspace and populate it
+        MehWorkspace workspace = create_shared_lib_folder_and_source(source_code);
         
-        // Step 4: Compile to shared library
-        std::filesystem::path lib_file = source_dir / "meta_transform.so";
-        if (!compile_shared_library(source_dir, lib_file)) {
+        // Step 4: Compile using workspace
+        if (!compile_shared_library(workspace)) {
             throw std::runtime_error("Failed to compile shared library");
         }
         
         // Step 5: Load and execute defacto_string function
-        std::string result = load_and_execute_defacto_string(lib_file);
+        std::string result = load_and_execute_defacto_string(workspace);
         
         // Note: We don't clean up the build directory so user can inspect the files
         if (options.verbose) {
-            std::cout << "Build files preserved in: " << source_dir << std::endl;
+            std::cout << "Build files preserved in: " << workspace.get_workspace_dir() << std::endl;
         }
         
         return result;
@@ -197,62 +198,20 @@ namespace cpptha {
         return source.str();
     }
     
-    std::filesystem::path create_shared_lib_folder_and_source(const std::string& source_code) {
-        // Create build directory in current working directory
-        std::filesystem::path build_dir = std::filesystem::current_path() / "meh_build";
-        std::filesystem::create_directories(build_dir);
-        
-        // Create unique meta-scope processing directory
-        std::filesystem::path meta_dir = build_dir / ("meh_" + std::to_string(std::time(nullptr)));
-        std::filesystem::create_directories(meta_dir);
-        
-        // Write source file
-        std::filesystem::path source_file = meta_dir / "meta_transform.cpp";
-        std::ofstream file(source_file);
-        if (!file) {
-            throw std::runtime_error("Failed to create source file: " + source_file.string());
-        }
-        file << source_code;
-        file.close();
-        
-        // Copy meh library files to build directory
-        std::filesystem::path meh_source_dir = std::filesystem::current_path() / "src" / "meh";
-        
-        // Copy meh.hpp
-        std::filesystem::copy_file(
-            meh_source_dir / "meh.hpp",
-            meta_dir / "meh.hpp",
-            std::filesystem::copy_options::overwrite_existing
-        );
-        
-        // Copy meh.cpp
-        std::filesystem::copy_file(
-            meh_source_dir / "meh.cpp",
-            meta_dir / "meh.cpp", 
-            std::filesystem::copy_options::overwrite_existing
-        );
-        
-        return meta_dir;
+    MehWorkspace create_shared_lib_folder_and_source(const std::string& source_code) {
+        MehWorkspace workspace(std::filesystem::current_path());
+        workspace.setup_for_source(source_code);
+        return workspace;
     }
     
-    bool compile_shared_library(const std::filesystem::path& source_dir, 
-                               const std::filesystem::path& output_lib) {
-        std::filesystem::path source_file = source_dir / "meta_transform.cpp";
-        std::filesystem::path meh_source_file = source_dir / "meh.cpp";
-        
-        // Build compiler command (include both meta_transform.cpp and meh.cpp)
-        std::ostringstream cmd;
-        cmd << "g++ -shared -fPIC -std=c++17 -o " 
-            << output_lib.string() << " " 
-            << source_file.string() << " " 
-            << meh_source_file.string();
-        
-        // Execute compiler
-        int result = std::system(cmd.str().c_str());
-        return result == 0;
+    bool compile_shared_library(const MehWorkspace& workspace) {
+        MehBuild builder(workspace);
+        return builder.compile();
     }
     
-    std::string load_and_execute_defacto_string(const std::filesystem::path& lib_file) {
+    std::string load_and_execute_defacto_string(const MehWorkspace& workspace) {
+        std::filesystem::path lib_file = workspace.get_lib_output_path();
+        
         // Load shared library
         void* handle = dlopen(lib_file.c_str(), RTLD_LAZY);
         if (!handle) {
