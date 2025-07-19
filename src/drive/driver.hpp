@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <filesystem>
-#include "meh_workspace.hpp"
+#include "MehWorkspace.hpp"
 
 namespace cpptha {
     struct Options {

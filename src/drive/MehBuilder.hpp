@@ -1,13 +1,13 @@
 #pragma once
-#include "meh_workspace.hpp"
+#include "MehWorkspace.hpp"
 #include <filesystem>
 
 namespace cpptha {
 
-    // MehBuild: Responsible for compilation using workspace
-    class MehBuild {
+    // MehBuilder: Responsible for compilation using workspace
+    class MehBuilder {
     public:
-        explicit MehBuild(const MehWorkspace& workspace);
+        explicit MehBuilder(const MehWorkspace& workspace);
         
         bool compile();
         

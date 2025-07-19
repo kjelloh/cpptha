@@ -1,6 +1,6 @@
 #include "driver.hpp"
-#include "meh_workspace.hpp"
-#include "meh_build.hpp"
+#include "MehWorkspace.hpp"
+#include "MehBuilder.hpp"
 #include "../parse/meta_parser.hpp"
 #include "../parse/meta_to_cpp_parse.hpp"
 #include <iostream>
@@ -205,7 +205,7 @@ namespace cpptha {
     }
     
     bool compile_shared_library(const MehWorkspace& workspace) {
-        MehBuild builder(workspace);
+        MehBuilder builder(workspace);
         return builder.compile();
     }
     
