@@ -2,6 +2,7 @@
 #include "test_fixtures.hpp"
 #include "../drive/MehWorkspace.hpp"
 #include "../drive/MehBuilder.hpp"
+#include "../drive/SharedBinarySourcerer.hpp"
 #include <gtest/gtest.h>
 #include <iostream>
 #include <filesystem>
@@ -22,20 +23,13 @@ namespace tests::integrations {
             // Test that MehWorkspace and MehBuilder can successfully build meh.cpp
             
             // Create a simple test source code that uses meh library
-            std::string test_source = R"(
-#include "meh.hpp"
-
-extern "C" {
-    const char* defacto_string();
-}
-
-const char* defacto_string() {
-    meh::meta_tha env{};
-    env += meh::struct_tha("TestStruct", "int x; int y;");
-    static std::string result = env.to_string();
-    return result.c_str();
-}
-)";
+            std::string test_code = 
+                "    meh::meta_tha env{};\n"
+                "    env += meh::struct_tha(\"TestStruct\", \"int x; int y;\");\n"
+                "    static std::string result = env.to_string();\n"
+                "    return result.c_str();";
+            
+            std::string test_source = cpptha::SharedBinarySourcerer::for_test_code(test_code).generate();
             
             // Create MehWorkspace and setup with test source
             cpptha::MehWorkspace workspace(std::filesystem::current_path());

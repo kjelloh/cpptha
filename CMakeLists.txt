@@ -11,6 +11,7 @@ add_executable(cpptha
     src/drive/driver.cpp
     src/drive/MehWorkspace.cpp
     src/drive/MehBuilder.cpp
+    src/drive/SharedBinarySourcerer.cpp
     src/parse/meta_parser.cpp
     src/parse/meta_to_cpp_parse.cpp
     src/test/test_runner.cpp

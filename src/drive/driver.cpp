@@ -1,6 +1,7 @@
 #include "driver.hpp"
 #include "MehWorkspace.hpp"
 #include "MehBuilder.hpp"
+#include "SharedBinarySourcerer.hpp"
 #include "../parse/meta_parser.hpp"
 #include "../parse/meta_to_cpp_parse.hpp"
 #include <iostream>
@@ -167,35 +168,7 @@ namespace cpptha {
     }
     
     std::string generate_shared_lib_source(const std::string& cpptha_repr) {
-        std::ostringstream source;
-        size_t content_size = cpptha_repr.size();
-        
-        source << "// Generated C++/C hybrid shared library source\n";
-        source << "// Exposes C API, implements in C++\n";
-        source << "// Content size: " << content_size << " bytes\n";
-        source << "\n";
-        
-        // C API Declaration
-        source << "extern \"C\" {\n";
-        source << "    const char* defacto_string();\n";
-        source << "}\n";
-        source << "\n";
-        
-        // Include meh library for meta_tha and struct_tha classes
-        source << "#include \"meh.hpp\"\n";
-        source << "\n";
-        
-        // C++ Implementation that executes cpptha_repr code and returns env.to_string()
-        source << "const char* defacto_string() {\n";
-        source << "    // Execute the cpptha representation code\n";
-        source << "    " << cpptha_repr;  // Inject the code directly
-        source << "\n";
-        source << "    // Return the result of env.to_string()\n";
-        source << "    static std::string result = env.to_string();\n";
-        source << "    return result.c_str();\n";
-        source << "}\n";
-        
-        return source.str();
+        return SharedBinarySourcerer::for_cpptha_repr(cpptha_repr).generate();
     }
     
     MehWorkspace create_shared_lib_folder_and_source(const std::string& source_code, const Options& options) {
