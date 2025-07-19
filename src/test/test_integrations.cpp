@@ -1,5 +1,6 @@
 #include "test_integrations.hpp"
 #include "test_fixtures.hpp"
+#include "../meh/meh.hpp"
 #include "../drive/MehWorkspace.hpp"
 #include "../drive/MehBuilder.hpp"
 #include "../drive/SharedBinarySourcerer.hpp"
@@ -23,17 +24,25 @@ namespace tests::integrations {
             // Test that MehWorkspace and MehBuilder can successfully build meh.cpp
             
             // Create a simple test source code that uses meh library
-            std::string test_code = 
-                "    meh::meta_tha env{};\n"
-                "    env += meh::struct_tha(\"TestStruct\", \"int x; int y;\");\n"
-                "    static std::string result = env.to_string();\n"
-                "    return result.c_str();";
-            
+            // std::string test_code = 
+            //     "    meh::meta_tha env{};\n"
+            //     "    env += meh::struct_tha(\"TestStruct\", \"int x; int y;\");\n"
+            //     "    static std::string result = env.to_string();\n"
+            //     "    return result.c_str();";
+            std::string test_code = ::meh::test::meh_test_code;
             std::string test_source = cpptha::SharedBinarySourcerer::for_test_code(test_code).generate();
             
-            // Create MehWorkspace and setup with test source
-            cpptha::MehWorkspace workspace(std::filesystem::current_path());
+            // Create MehWorkspace and setup with test source (respect keep_files setting)
+            bool keep_files = tests::fixtures::TestEnvironment::GetInstance()->ShouldKeepTestFiles();
+            cpptha::MehWorkspace workspace(std::filesystem::current_path(), keep_files);
             workspace.setup_for_source(test_source);
+            
+            // Show where MehWorkspace operates
+            std::cout << "MehWorkspace build directory: " << workspace.get_workspace_dir() << std::endl;
+            std::cout << "keep_files flag: " << (keep_files ? "true" : "false") << std::endl;
+            if (keep_files) {
+                std::cout << "MehWorkspace files will be preserved (--keep-test-files flag)" << std::endl;
+            }
             
             // Use MehBuilder to compile
             cpptha::MehBuilder builder(workspace);

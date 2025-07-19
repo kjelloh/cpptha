@@ -1,7 +1,9 @@
 #include "MehWorkspace.hpp"
 #include <iostream>
 #include <fstream>
-#include <ctime>
+#include <chrono>
+#include <iomanip>
+#include <sstream>
 
 namespace cpptha {
 
@@ -10,12 +12,17 @@ namespace cpptha {
     }
 
     MehWorkspace::~MehWorkspace() {
+        std::cout << "MehWorkspace destructor: keep_files=" << (keep_files ? "true" : "false") 
+                  << ", workspace_dir=" << workspace_dir << std::endl;
         if (!keep_files && !workspace_dir.empty()) {
+            std::cout << "MehWorkspace destructor: Cleaning up directory " << workspace_dir << std::endl;
             try {
                 std::filesystem::remove_all(workspace_dir);
             } catch (const std::exception& e) {
                 // Silently ignore cleanup errors to avoid throwing from destructor
             }
+        } else {
+            std::cout << "MehWorkspace destructor: Preserving directory " << workspace_dir << std::endl;
         }
     }
 
@@ -30,8 +37,16 @@ namespace cpptha {
         std::filesystem::path build_dir = working_dir / "meh_build";
         std::filesystem::create_directories(build_dir);
         
-        // Create unique meta-scope processing directory
-        workspace_dir = build_dir / ("meh_" + std::to_string(std::time(nullptr)));
+        // Create unique meta-scope processing directory with date-time and milliseconds
+        auto now = std::chrono::system_clock::now();
+        auto time_t = std::chrono::system_clock::to_time_t(now);
+        auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()) % 1000;
+        
+        std::ostringstream timestamp;
+        timestamp << std::put_time(std::localtime(&time_t), "%Y%m%d_%H%M%S");
+        timestamp << "_" << std::setfill('0') << std::setw(3) << ms.count();
+        
+        workspace_dir = build_dir / ("meh_" + timestamp.str());
         std::filesystem::create_directories(workspace_dir);
     }
 
