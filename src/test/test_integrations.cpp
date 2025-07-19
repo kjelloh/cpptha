@@ -1,5 +1,7 @@
 #include "test_integrations.hpp"
 #include "test_fixtures.hpp"
+#include "../drive/MehWorkspace.hpp"
+#include "../drive/MehBuilder.hpp"
 #include <gtest/gtest.h>
 #include <iostream>
 #include <filesystem>
@@ -17,6 +19,38 @@ namespace tests::integrations {
         // Namespace alias for the fixture
         using MehBuildFixture = tests::fixtures::MehBuildFixture;
         TEST(MehBuildFixture, CompileMehLibrary) {
+            // Test that MehWorkspace and MehBuilder can successfully build meh.cpp
+            
+            // Create a simple test source code that uses meh library
+            std::string test_source = R"(
+#include "meh.hpp"
+
+extern "C" {
+    const char* defacto_string();
+}
+
+const char* defacto_string() {
+    meh::meta_tha env{};
+    env += meh::struct_tha("TestStruct", "int x; int y;");
+    static std::string result = env.to_string();
+    return result.c_str();
+}
+)";
+            
+            // Create MehWorkspace and setup with test source
+            cpptha::MehWorkspace workspace(std::filesystem::current_path());
+            workspace.setup_for_source(test_source);
+            
+            // Use MehBuilder to compile
+            cpptha::MehBuilder builder(workspace);
+            bool compile_success = builder.compile();
+            
+            // Assert that compilation succeeded
+            EXPECT_TRUE(compile_success) << "MehBuilder failed to compile meh.cpp with test source";
+            
+            // Verify the shared library was created
+            EXPECT_TRUE(std::filesystem::exists(workspace.get_lib_output_path())) 
+                << "Shared library was not created at: " << workspace.get_lib_output_path();
         }
     }
 
@@ -98,7 +132,7 @@ namespace tests::integrations {
             std::cout << "Running integration tests..." << std::endl;
             
             // Run gtest with filter for integration tests only
-            ::testing::GTEST_FLAG(filter) = "IntegrationTests.*:MetaTransformFixture.*";
+            ::testing::GTEST_FLAG(filter) = "IntegrationTests.*:MetaTransformFixture.*:MehBuildFixture.*";
             int result = RUN_ALL_TESTS();
             
             return result == 0;
