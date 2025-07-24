@@ -15,9 +15,9 @@ namespace cpptha {
         
         // Accessors for build process
         const std::filesystem::path& get_workspace_dir() const { return workspace_dir; }
-        std::filesystem::path get_source_file() const { return workspace_dir / "meta_transform.cpp"; }
+        std::filesystem::path get_source_file() const { return workspace_dir / "meh_to_tha_lib.cpp"; }
         std::filesystem::path get_meh_cpp_file() const { return workspace_dir / "meh.cpp"; }
-        std::filesystem::path get_lib_output_path() const { return workspace_dir / "meta_transform.so"; }
+        std::filesystem::path get_lib_output_path() const { return workspace_dir / "meh_to_tha_lib.so"; }
         
     private:
         std::filesystem::path working_dir;

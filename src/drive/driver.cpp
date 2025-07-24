@@ -96,18 +96,18 @@ namespace cpptha {
         }
     }
     
-    std::string process_scope(const std::string& meta_scope_content, const Options& options) {
+    std::string process_scope(const std::string& scope_tha_code, const Options& options) {
         if (options.verbose) {
-            std::cout << "Processing meta-scope: " << meta_scope_content.substr(0, 50) << "..." << std::endl;
+            std::cout << "Processing meta-scope: " << scope_tha_code.substr(0, 50) << "..." << std::endl;
         }
         
-        // Step 1: Transform meta-scope to cpptha representation
-        std::string cpptha_repr = meta_to_cpptha_repr(meta_scope_content);
+        // Step 1: Transform 'tha code' (c++ meta code) into meh-library representation
+        std::string meh_model_repr = tha_to_meh_model_repr(scope_tha_code);
         
-        // Step 2: Generate C++ source code
-        std::string source_code = generate_shared_lib_source(cpptha_repr);
+        // Step 2: Generate complete share binary C++ code with meh-representation injected
+        std::string source_code = generate_mehtotha_lib_source(meh_model_repr);
         
-        // Step 3: Create workspace and populate it
+        // Step 3: Create disk workspace and populate it
         MehWorkspace workspace = create_shared_lib_folder_and_source(source_code, options);
         
         // Step 4: Compile using workspace
@@ -116,7 +116,8 @@ namespace cpptha {
         }
         
         // Step 5: Load and execute defacto_string function
-        std::string result = load_and_execute_defacto_string(workspace);
+        //         Compiled meh-representation results in environment that can generate the 'collapsed' tha-code
+        std::string result = load_and_execute_shared_lib(workspace);
         
         // Note: We don't clean up the build directory so user can inspect the files
         if (options.verbose) {
@@ -126,7 +127,7 @@ namespace cpptha {
         return result;
     }
     
-    std::string meta_to_cpptha_repr(const std::string& content) {
+    std::string tha_to_meh_model_repr(const std::string& content) {
         // Parse the meta-content using our new parser
         parse::MetaToCppParser parser;
         auto parse_result = parser.parse(content);
@@ -167,8 +168,8 @@ namespace cpptha {
         return result.str();
     }
     
-    std::string generate_shared_lib_source(const std::string& cpptha_repr) {
-        return SharedBinarySourcerer::for_cpptha_repr(cpptha_repr).generate();
+    std::string generate_mehtotha_lib_source(const std::string& meh_model_repr) {
+        return SharedBinarySourcerer::for_mehtotha_repr(meh_model_repr).generate();
     }
     
     MehWorkspace create_shared_lib_folder_and_source(const std::string& source_code, const Options& options) {
@@ -182,7 +183,7 @@ namespace cpptha {
         return builder.compile();
     }
     
-    std::string load_and_execute_defacto_string(const MehWorkspace& workspace) {
+    std::string load_and_execute_shared_lib(const MehWorkspace& workspace) {
         std::filesystem::path lib_file = workspace.get_lib_output_path();
         
         // Load shared library

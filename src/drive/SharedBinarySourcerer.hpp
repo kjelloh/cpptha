@@ -3,7 +3,7 @@
 
 namespace cpptha {
 
-    // SharedBinarySourcerer: Responsible for generating meta_transform.cpp source code
+    // SharedBinarySourcerer: Responsible for generating meh_to_tha_lib.cpp source code
     class SharedBinarySourcerer {
     public:
         // Constructor takes the code to inject into the defacto_string function body
@@ -13,7 +13,7 @@ namespace cpptha {
         std::string generate() const;
         
         // Static factory methods for common patterns
-        static SharedBinarySourcerer for_cpptha_repr(const std::string& cpptha_repr);
+        static SharedBinarySourcerer for_mehtotha_repr(const std::string& meh_model_repr);
         static SharedBinarySourcerer for_test_code(const std::string& test_code);
         
     private:

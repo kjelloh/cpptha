@@ -56,11 +56,11 @@ This document tracks the development progress of the cpptha C++ meta-code prepro
   - Extracts keyword, optional identifier, and body content
 
 - **Dynamic Execution Pipeline** (`src/drive/driver.cpp`)
-  - `meta_to_cpptha_repr()` - Transforms meta-scope to executable cpptha representation
-  - `generate_shared_lib_source()` - Generates C++ source with `#include "meh.hpp"`
+  - `tha_to_meh_model_repr()` - Transforms meta-scope with tha-code (C++ meta code) to meh-model representation
+  - `generate_mehtotha_lib_source()` - Generates C++ source with `#include "meh.hpp"`
   - `create_shared_lib_folder_and_source()` - Creates build directory and copies meh library
-  - `compile_shared_library()` - Compiles both `meta_transform.cpp` and `meh.cpp`
-  - `load_and_execute_defacto_string()` - Dynamically loads and executes transformation
+  - `compile_shared_library()` - Compiles and links `meh_to_tha_lib.cpp` and dependncies like meh.cpp 
+  - `load_and_execute_shared_lib()` - Dynamically loads and executes transformation
 
 - **Meh Library Integration** (`src/meh/`)
   - `meh::meta_tha` - Environment class for collecting transformations

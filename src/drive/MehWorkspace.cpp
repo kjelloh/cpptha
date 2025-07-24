@@ -70,7 +70,7 @@ namespace cpptha {
     }
 
     void MehWorkspace::write_source_file(const std::string& source_code) {
-        std::filesystem::path source_file = workspace_dir / "meta_transform.cpp";
+        std::filesystem::path source_file = workspace_dir / "meh_to_tha_lib.cpp";
         std::ofstream file(source_file);
         if (!file) {
             throw std::runtime_error("Failed to create source file: " + source_file.string());

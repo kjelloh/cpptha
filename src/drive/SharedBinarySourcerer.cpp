@@ -16,11 +16,11 @@ namespace cpptha {
         return source.str();
     }
 
-    SharedBinarySourcerer SharedBinarySourcerer::for_cpptha_repr(const std::string& cpptha_repr) {
+    SharedBinarySourcerer SharedBinarySourcerer::for_mehtotha_repr(const std::string& meh_model_repr) {
         // For cpptha representation, we inject the generated meh library calls
         std::ostringstream code;
         code << "    // Execute the cpptha representation code\n";
-        code << "    " << cpptha_repr;
+        code << "    " << meh_model_repr;
         code << "\n";
         code << "    // Return the result of env.to_string()\n";
         code << "    static std::string result = env.to_string();\n";

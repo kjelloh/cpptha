@@ -55,7 +55,7 @@ namespace tests::fixtures {
         void copy_meh_library();
     };
     
-    // Utility function to copy meh library to any meta_transform build directory
+    // Utility function to copy meh library to any meh_to_tha_lib build directory
     void copy_meh_library_to_build_dir(const std::filesystem::path& build_dir);
     
 }
